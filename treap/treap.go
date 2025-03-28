@@ -94,13 +94,12 @@ func split(n *node, index int) (l *node, r *node) {
 	}
 
 	if position < 0 {
-		// split left son
 		l, r = split(n.lson, index)
 		n.lson = r
 		sync(n)
 		return l, n
 	} else if position > 0 {
-		l, r = split(n.rson, index)
+		l, r = split(n.rson, position-1)
 		n.rson = l
 		sync(n)
 		return n, r
@@ -142,9 +141,6 @@ func export(values []int, position int, n *node) {
 /*
 Main type of a data structure that stores a single pointer.
 That pointer is pointing to the root node.
-
-This type shouldn't be used to initialize a varible.
-Use `Create()` or `*Treap` type instead.
 */
 type Treap struct {
 	root *node
@@ -157,8 +153,8 @@ Insert all given values to the back by calling `PushBack()` method.
 # Time complexity:
   - Loglinear - time complexity is equal to height of the treap multiplied by amount of provided values;
 */
-func Create(values ...int) *Treap {
-	t := &Treap{nil}
+func New(values ...int) Treap {
+	t := Treap{nil}
 	t.PushBack(values...)
 	return t
 }
@@ -170,13 +166,15 @@ Old treaps must not be used afterwards.
 # Time complexity:
   - Logarithmic - time complexity is equal to height of the highest treap;
 */
-func Merge(t1 *Treap, t2 *Treap) *Treap {
-	if t1 == nil {
-		return t2
+func Merge(t1 *Treap, t2 *Treap) Treap {
+	if t1 == nil && t2 == nil {
+		return Treap{}
+	} else if t1 == nil {
+		return Treap{t2.root}
 	} else if t2 == nil {
-		return t1
+		return Treap{t1.root}
 	}
-	return &Treap{merge(t1.root, t2.root)}
+	return Treap{merge(t1.root, t2.root)}
 }
 
 /*
@@ -191,12 +189,10 @@ Old treap must not be used afterwards.
 # Time complexity:
   - Logarithmic - time complexity is equal to height of the highest treap;
 */
-func Split(t *Treap, index int) (tl *Treap, tr *Treap) {
-	if t == nil {
-		return nil, nil
+func Split(t *Treap, index int) (tl Treap, tr Treap) {
+	if t != nil {
+		tl.root, tr.root = split(t.root, index)
 	}
-	tl, tr = &Treap{nil}, &Treap{nil}
-	tl.root, tr.root = split(t.root, index)
 	return
 }
 
