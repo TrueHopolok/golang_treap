@@ -11,6 +11,7 @@ const tests_amount = 100_000_000
 
 func main() {
 	var timestamp time.Time
+
 	values := make([]int, tests_amount)
 	indexes := make([]int, tests_amount)
 	for i := 0; i < tests_amount; i++ {
@@ -19,7 +20,6 @@ func main() {
 	}
 
 	//* SLICE TESTING
-
 	s := make([]int, 0)
 	timestamp = time.Now()
 
@@ -38,8 +38,7 @@ func main() {
 	fmt.Println(time.Since(timestamp).Seconds())
 
 	//* TREAP TESTING
-
-	t := treap.Create()
+	t := treap.New()
 	timestamp = time.Now()
 
 	for i := 0; i < tests_amount; i++ {
